@@ -1,0 +1,436 @@
+/* ── Game editor: custom inputs ─────────────────────────────────────────── */
+
+/* Release date */
+
+.editor-date {
+  display: flex;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.editor-date > .input {
+  min-width: 0;
+}
+
+.editor-date-precision {
+  flex: 0 0 124px;
+}
+
+.editor-date-day,
+.editor-date-month {
+  flex: 1 1 auto;
+}
+
+.editor-date-quarter {
+  flex: 0 0 76px;
+}
+
+.editor-date-year {
+  flex: 0 0 76px;
+  font-variant-numeric: tabular-nums;
+}
+
+.editor-date-precision + .editor-date-year {
+  flex: 1 1 auto;
+}
+
+.editor-date-day::-webkit-calendar-picker-indicator {
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+.editor-date-day::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+.editor-date-tba {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+  color: var(--text-faint);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.editor-date-preview {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Priority segmented control */
+
+.editor-priority {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 4px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.editor-priority-option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  height: 30px;
+  padding: 0 var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  transition:
+    background-color 140ms var(--ease),
+    border-color 140ms var(--ease),
+    color 140ms var(--ease);
+}
+
+.editor-priority-option:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.editor-priority-option:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.editor-priority-option.is-selected {
+  background: color-mix(in srgb, var(--editor-priority-color) 16%, transparent);
+  border-color: color-mix(in srgb, var(--editor-priority-color) 45%, transparent);
+  color: var(--editor-priority-color);
+}
+
+.editor-priority-emoji {
+  font-size: 13px;
+  line-height: 1;
+  filter: grayscale(0.85);
+  opacity: 0.7;
+  transition:
+    filter 140ms var(--ease),
+    opacity 140ms var(--ease);
+}
+
+.editor-priority-option:hover .editor-priority-emoji,
+.editor-priority-option.is-selected .editor-priority-emoji {
+  filter: none;
+  opacity: 1;
+}
+
+.editor-priority-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Chip box (list inputs and tags) */
+
+.editor-combo {
+  position: relative;
+  min-width: 0;
+}
+
+.editor-chipbox {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  min-height: 34px;
+  padding: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: text;
+  transition:
+    border-color 120ms var(--ease),
+    box-shadow 120ms var(--ease);
+}
+
+.editor-chipbox:hover {
+  border-color: var(--border-strong);
+}
+
+.editor-chipbox:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.editor-chipbox .chip,
+.editor-chipbox .tag-chip {
+  max-width: 100%;
+  cursor: default;
+}
+
+.editor-chipbox-input {
+  flex: 1 1 64px;
+  min-width: 64px;
+  height: 24px;
+  padding: 0 6px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: var(--text-md);
+}
+
+/* With chips and no text, the box only needs room for a caret until it is focused. */
+.editor-chipbox:not(:focus-within) .editor-chipbox-input.is-idle {
+  flex-basis: 8px;
+  min-width: 8px;
+}
+
+.editor-chipbox-input:focus,
+.editor-chipbox-input:focus-visible {
+  outline: none;
+}
+
+.editor-chipbox-input::placeholder {
+  color: var(--text-faint);
+}
+
+.editor-combo-error {
+  margin-top: 6px;
+}
+
+.editor-tag-dot {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--editor-tag-color);
+}
+
+/* Suggestion list */
+
+.editor-suggest {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  max-height: 232px;
+  margin: 0;
+  padding: var(--space-1);
+  overflow-y: auto;
+  list-style: none;
+  background: var(--bg-elev);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  animation: editor-suggest-in 120ms var(--ease);
+}
+
+.editor-suggest-down {
+  top: calc(100% + 4px);
+}
+
+.editor-suggest-up {
+  bottom: calc(100% + 4px);
+}
+
+@keyframes editor-suggest-in {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+}
+
+.editor-suggest-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 30px;
+  padding: 5px var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: var(--text-md);
+  cursor: pointer;
+}
+
+.editor-suggest-option.is-active {
+  background: var(--surface-2);
+}
+
+.editor-suggest-option.is-action {
+  color: var(--text-muted);
+}
+
+.editor-suggest-option.is-action strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.editor-suggest-option.is-action.is-active {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.editor-suggest-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  flex-shrink: 0;
+  color: var(--text-faint);
+}
+
+.editor-suggest-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Thumbnails */
+
+.editor-thumb {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 56px;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 5px;
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--border);
+  color: var(--text-faint);
+}
+
+.editor-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Remove buttons turn red on hover */
+
+.editor-modal .editor-remove:hover:not(:disabled) {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+/* URL list (screenshots) */
+
+.editor-urllist {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.editor-urllist-add {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.editor-urllist-add .input {
+  flex: 1;
+  min-width: 0;
+}
+
+.editor-urllist-error {
+  margin-top: -2px;
+}
+
+.editor-urllist-rows {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.editor-urllist-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 6px 6px 6px 8px;
+  background: var(--surface);
+  transition: background-color 120ms var(--ease);
+}
+
+.editor-urllist-row + .editor-urllist-row {
+  border-top: 1px solid var(--border);
+}
+
+.editor-urllist-row:hover {
+  background: var(--surface-2);
+}
+
+.editor-urllist-url {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+/* Trailer / link rows */
+
+.editor-rows {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.editor-rows-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.editor-rows-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.editor-rows-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) auto auto;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.editor-rows-list.has-preview .editor-rows-row {
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 1.5fr) auto auto;
+}
+
+.editor-rows-preview {
+  display: inline-flex;
+}
+
+.editor-rows-preview .editor-thumb {
+  width: 60px;
+}
+
+.editor-rows-error {
+  padding-left: 2px;
+}
+
+.editor-rows-list.has-preview .editor-rows-error {
+  padding-left: calc(60px + var(--space-2) + 2px);
+}
+
+.editor-rows-add {
+  margin-left: -6px;
+}

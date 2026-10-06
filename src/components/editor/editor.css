@@ -1,0 +1,226 @@
+/* ── Game editor dialog: layout, sections, footer ───────────────────────── */
+
+.editor-modal .modal-body {
+  flex: 1;
+  padding: var(--space-5) var(--space-6) var(--space-6);
+  scroll-padding-block: var(--space-6);
+}
+
+.editor-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+/* Sections */
+
+.editor-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.editor-section-heading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font);
+  font-size: var(--text-xs);
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.editor-section-heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.editor-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.editor-grid-when {
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+}
+
+/* Fields */
+
+.editor-field-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-height: 18px;
+}
+
+.editor-required {
+  margin-left: 3px;
+  color: var(--accent);
+}
+
+.editor-field-aside {
+  min-width: 18px;
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+  color: var(--text-faint);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: 17px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.editor-field-message {
+  line-height: 1.4;
+}
+
+.editor-modal .input[aria-invalid='true'] {
+  border-color: var(--danger);
+}
+
+.editor-modal .input[aria-invalid='true']:focus {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px var(--danger-soft);
+}
+
+.editor-title-input {
+  height: 42px;
+  padding: 0 12px;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+.editor-title-input::placeholder {
+  font-weight: 400;
+}
+
+/* Cover row */
+
+.editor-cover-row {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.editor-cover-preview {
+  width: 84px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px var(--border),
+    var(--shadow-sm);
+}
+
+.editor-cover-preview .cover-monogram {
+  font-size: 22px;
+}
+
+.editor-modal .textarea {
+  min-height: 112px;
+}
+
+/* Footer */
+
+.editor-footer-status {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  margin-right: auto;
+  font-size: var(--text-sm);
+}
+
+.editor-footer-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+
+.editor-footer-hint kbd {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 5px;
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
+.editor-footer-hint kbd:last-of-type {
+  margin-right: 3px;
+}
+
+.editor-footer-dirty {
+  margin-left: 4px;
+  color: var(--text-muted);
+}
+
+.editor-footer-msg {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  animation: editor-fade-in 160ms var(--ease);
+}
+
+.editor-footer-msg > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.editor-footer-msg svg {
+  flex-shrink: 0;
+}
+
+.editor-footer-msg.is-error {
+  color: var(--danger);
+}
+
+.editor-footer-msg.is-success {
+  color: var(--success);
+}
+
+.editor-save {
+  min-width: 84px;
+}
+
+.editor-spin {
+  animation: editor-spin 800ms linear infinite;
+}
+
+@keyframes editor-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes editor-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .editor-spin,
+  .editor-footer-msg {
+    animation: none;
+  }
+}

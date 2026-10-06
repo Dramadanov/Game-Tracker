@@ -470,10 +470,19 @@ button.tag-chip-main:hover {
 
 /* ── Toasts ──────────────────────────────────────────────────────────────── */
 
+.toasts:not(:popover-open) {
+  display: none;
+}
+
 .toasts {
   position: fixed;
-  right: var(--space-5);
-  bottom: var(--space-5);
+  inset: auto var(--space-5) var(--space-5) auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: visible;
+  color: inherit;
   z-index: 1000;
   display: flex;
   flex-direction: column;

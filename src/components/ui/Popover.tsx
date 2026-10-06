@@ -35,11 +35,13 @@ export function Popover({ trigger, children, align = 'start', panelClassName = '
       }
     }
     document.addEventListener('mousedown', onPointer)
-    rootRef.current?.addEventListener('keydown', onKey)
-    const root = rootRef.current
+    // Capture phase on the document: Esc closes the popover even if focus is elsewhere
+    // (e.g. on <body> after a button inside the panel disabled itself), and runs before
+    // a containing <dialog> would treat the same Esc as a close request.
+    document.addEventListener('keydown', onKey, true)
     return () => {
       document.removeEventListener('mousedown', onPointer)
-      root?.removeEventListener('keydown', onKey)
+      document.removeEventListener('keydown', onKey, true)
     }
   }, [open])
 
@@ -72,8 +74,8 @@ export function MenuItem({ onSelect, children, icon, selected, danger, disabled 
       className={`menu-item${selected ? ' is-selected' : ''}${danger ? ' is-danger' : ''}`}
       onClick={onSelect}
       disabled={disabled}
-      role="menuitemradio"
-      aria-checked={selected ?? false}
+      role={selected === undefined ? 'menuitem' : 'menuitemradio'}
+      aria-checked={selected}
     >
       {icon && <span className="menu-item-icon">{icon}</span>}
       <span className="menu-item-label">{children}</span>

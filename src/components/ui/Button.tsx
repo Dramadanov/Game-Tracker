@@ -1,8 +1,8 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react'
+import type { ComponentProps, ReactNode } from 'react'
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
 
-export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends ComponentProps<'button'> {
   variant?: ButtonVariant
   size?: 'sm' | 'md'
   icon?: ReactNode
@@ -33,7 +33,7 @@ export function Button({
   )
 }
 
-export interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface IconButtonProps extends ComponentProps<'button'> {
   /** Required: used as tooltip and accessible name. */
   label: string
   icon: ReactNode

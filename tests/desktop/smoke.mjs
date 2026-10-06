@@ -25,11 +25,9 @@ if (!existsSync(APP)) {
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
 async function wd(method, path, body) {
-  const res = await fetch(DRIVER + path, {
-    method,
-    headers: { 'content-type': 'application/json' },
-    body: body === undefined ? undefined : JSON.stringify(body),
-  })
+  const init = { method, headers: { 'content-type': 'application/json' } }
+  if (body !== undefined) init.body = JSON.stringify(body)
+  const res = await fetch(DRIVER + path, init)
   const json = await res.json().catch(() => ({}))
   if (!res.ok) throw new Error(`${method} ${path} → ${res.status}: ${JSON.stringify(json.value ?? json)}`)
   return json.value
@@ -50,7 +48,8 @@ async function waitFor(session, css, timeout = 20000) {
   while (Date.now() < end) {
     try {
       const el = await wd('POST', `/session/${session}/element`, { using: 'css selector', value: css })
-      return el[ELEMENT]
+      // W3C key, with a fallback for drivers that use another key name.
+      return el[ELEMENT] ?? Object.values(el)[0]
     } catch (error) {
       lastError = error
       await sleep(250)
@@ -95,8 +94,8 @@ try {
   await waitFor(session, '.app')
   check((await bodyText(session)).includes('Start your watchlist'), 'empty library on first launch')
   await click(session, '[data-testid=toolbar-add-game]')
-  await waitFor(session, 'dialog[open] input')
-  await type(session, 'dialog[open] input', TITLE)
+  await waitFor(session, '#editor-title')
+  await type(session, '#editor-title', TITLE)
   await click(session, '[data-testid=editor-save]')
   await sleep(800)
   check((await bodyText(session)).includes(TITLE), 'new game shows in the library')

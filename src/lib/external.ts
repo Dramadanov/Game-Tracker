@@ -1,3 +1,4 @@
+import { isTauri } from '@tauri-apps/api/core'
 import { isWebUrl } from '../domain/game'
 
 /**
@@ -7,7 +8,6 @@ import { isWebUrl } from '../domain/game'
  */
 export async function openExternal(url: string): Promise<void> {
   if (!isWebUrl(url)) return
-  const { isTauri } = await import('@tauri-apps/api/core')
   if (isTauri()) {
     const { openUrl } = await import('@tauri-apps/plugin-opener')
     await openUrl(url)

@@ -78,8 +78,9 @@ export function isWebUrl(value: string): boolean {
   }
 }
 
+/** Trimmed web URLs, exact duplicates removed. URLs are case-sensitive, so no case folding. */
 function cleanUrls(values: readonly string[]): string[] {
-  return cleanList(values.map((v) => v.trim())).filter(isWebUrl)
+  return Array.from(new Set(values.map((v) => v.trim()).filter(isWebUrl)))
 }
 
 function cleanTrailers(values: readonly Trailer[]): Trailer[] {
@@ -171,10 +172,14 @@ export function youtubeThumbnail(videoId: string): string {
 /** Two-letter monogram for games without cover art. */
 export function monogram(title: string): string {
   const words = title
+    // Apostrophes join a word ("Baldur's Gate" → BG); other punctuation separates words.
+    .replace(/['’]/g, '')
     .replace(/[^\p{L}\p{N}\s]/gu, ' ')
     .split(/\s+/)
     .filter(Boolean)
+    // Code points, not UTF-16 units, so letters outside the BMP are never split.
+    .map((word) => Array.from(word))
   if (words.length === 0) return '?'
-  if (words.length === 1) return words[0].slice(0, 2).toUpperCase()
+  if (words.length === 1) return words[0].slice(0, 2).join('').toUpperCase()
   return (words[0][0] + words[1][0]).toUpperCase()
 }

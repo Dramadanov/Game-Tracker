@@ -97,6 +97,7 @@ export interface AppState {
 
 let repo: Repository | null = null
 let persistViewTimer: ReturnType<typeof setTimeout> | null = null
+let initPromise: Promise<void> | null = null
 
 function requireRepo(): Repository {
   if (!repo) throw new Error('Database is not open yet.')
@@ -123,9 +124,13 @@ export function applyTheme(theme: Theme): void {
   document.documentElement.style.colorScheme = theme
 }
 
-/** Stable stringify for comparing view configs. */
+/** Stable stringify for comparing view configs: object keys are sorted, so key order never matters. */
 export function viewKey(view: ViewConfig): string {
-  return JSON.stringify(view)
+  return JSON.stringify(view, (_key, value: unknown) =>
+    value && typeof value === 'object' && !Array.isArray(value)
+      ? Object.fromEntries(Object.entries(value).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)))
+      : value,
+  )
 }
 
 export const useStore = create<AppState>()((set, get) => {
@@ -170,6 +175,36 @@ export const useStore = create<AppState>()((set, get) => {
     return stored
   }
 
+  /** Opens the database and loads everything into the store. */
+  async function load(): Promise<void> {
+    set({ status: 'loading', loadError: null })
+    try {
+      const db = await openDatabase()
+      repo = new Repository(db)
+      const tags = await repo.listTags()
+      const tagIds = new Set(tags.map((t) => t.id))
+      const [games, savedViews, settings] = await Promise.all([
+        repo.listGames(),
+        repo.listSavedViews(tagIds),
+        repo.getSettings(tagIds),
+      ])
+      applyTheme(settings.theme)
+      set({
+        status: 'ready',
+        // Drop references to tags that no longer exist (e.g. an interrupted tag delete).
+        games: games.map((g) =>
+          g.tagIds.every((id) => tagIds.has(id)) ? g : { ...g, tagIds: g.tagIds.filter((id) => tagIds.has(id)) },
+        ),
+        tags: sortedTags(tags),
+        savedViews: sortedViews(savedViews),
+        theme: settings.theme,
+        view: settings.lastView ?? DEFAULT_VIEW,
+      })
+    } catch (error) {
+      set({ status: 'error', loadError: errorMessage(error) })
+    }
+  }
+
   return {
     status: 'loading',
     loadError: null,
@@ -184,34 +219,14 @@ export const useStore = create<AppState>()((set, get) => {
     tagManagerOpen: false,
     toasts: [],
 
-    async init() {
-      if (get().status === 'ready') return
-      set({ status: 'loading', loadError: null })
-      try {
-        const db = await openDatabase()
-        repo = new Repository(db)
-        const tags = await repo.listTags()
-        const tagIds = new Set(tags.map((t) => t.id))
-        const [games, savedViews, settings] = await Promise.all([
-          repo.listGames(),
-          repo.listSavedViews(tagIds),
-          repo.getSettings(tagIds),
-        ])
-        applyTheme(settings.theme)
-        set({
-          status: 'ready',
-          // Drop references to tags that no longer exist (e.g. an interrupted tag delete).
-          games: games.map((g) =>
-            g.tagIds.every((id) => tagIds.has(id)) ? g : { ...g, tagIds: g.tagIds.filter((id) => tagIds.has(id)) },
-          ),
-          tags: sortedTags(tags),
-          savedViews: sortedViews(savedViews),
-          theme: settings.theme,
-          view: settings.lastView ?? DEFAULT_VIEW,
-        })
-      } catch (error) {
-        set({ status: 'error', loadError: errorMessage(error) })
-      }
+    init() {
+      if (get().status === 'ready') return Promise.resolve()
+      // React StrictMode runs effects twice in development: share one load instead of
+      // opening the database (and running migrations) twice concurrently.
+      initPromise ??= load().finally(() => {
+        initPromise = null
+      })
+      return initPromise
     },
 
     // ── Games ──────────────────────────────────────────────────────────────
@@ -302,6 +317,11 @@ export const useStore = create<AppState>()((set, get) => {
         get().notify('error', 'Tag name cannot be empty.')
         return false
       }
+      // The upsert below would otherwise re-create a tag deleted meanwhile (e.g. a late rename on blur).
+      if (!get().tags.some((t) => t.id === tag.id)) {
+        get().notify('error', 'That tag no longer exists.')
+        return false
+      }
       const clash = get().tags.find((t) => t.id !== tag.id && foldText(t.name) === foldText(clean))
       if (clash) {
         get().notify('error', `A tag named “${clash.name}” already exists.`)
@@ -322,7 +342,8 @@ export const useStore = create<AppState>()((set, get) => {
       try {
         const r = requireRepo()
         await r.deleteTag(id)
-        const now = new Date().toISOString()
+        // Removing a tag is not an edit of the game, so updatedAt stays as it is (in memory and on disk).
+        const untag = (g: Game): Game => ({ ...g, tagIds: g.tagIds.filter((t) => t !== id) })
         const affected = get().games.filter((g) => g.tagIds.includes(id))
         set((s) => {
           const filters = s.view.filters
@@ -331,13 +352,13 @@ export const useStore = create<AppState>()((set, get) => {
             : s.view
           return {
             tags: s.tags.filter((t) => t.id !== id),
-            games: s.games.map((g) => (g.tagIds.includes(id) ? { ...g, tagIds: g.tagIds.filter((t) => t !== id) } : g)),
+            games: s.games.map((g) => (g.tagIds.includes(id) ? untag(g) : g)),
             view,
           }
         })
         // Clean the stored games too. If this is interrupted, init() drops dangling IDs on next start.
         for (const game of affected) {
-          await r.saveGame({ ...game, tagIds: game.tagIds.filter((t) => t !== id), updatedAt: now })
+          await r.saveGame(untag(game))
         }
         // Saved views referencing the tag.
         const tagIds = new Set(get().tags.map((t) => t.id))

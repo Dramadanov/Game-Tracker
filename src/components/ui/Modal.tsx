@@ -45,6 +45,9 @@ export function Modal({
     if (open && !dialog.open) {
       const previouslyFocused = document.activeElement as HTMLElement | null
       dialog.showModal()
+      // React's autoFocus runs before showModal(), which then moves focus to the first
+      // focusable element (the Close button). Elements marked data-autofocus win instead.
+      dialog.querySelector<HTMLElement>('[data-autofocus]')?.focus()
       return () => {
         if (dialog.open) dialog.close()
         previouslyFocused?.focus?.()
