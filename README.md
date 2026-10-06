@@ -3,7 +3,8 @@
 A Windows desktop hub for the games you're waiting for — release dates, studios, trailers,
 screenshots, tags and how much you want each one. Everything is stored locally on your PC.
 
-> **Status:** Phase 1 (core library) — see [docs/PLAN.md](docs/PLAN.md) for the roadmap.
+> **Status:** Phase 1 (core library) — see [docs/PLAN.md](docs/PLAN.md) for the roadmap and
+> [docs/HANDOFF.md](docs/HANDOFF.md) for current status and next steps.
 > Auto-fill from IGDB, delay/cancellation tracking and news arrive in later phases.
 
 ## ✨ What it does today

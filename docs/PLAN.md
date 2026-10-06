@@ -63,19 +63,19 @@ delays/cancellations and news — all stored locally, all editable.
 
 Each phase ends with a usable app.
 
-### Phase 1 — Core ✍️ *(in progress)*
-- [ ] Add, edit, delete games manually — every field editable
-- [ ] Fields: title, summary, cover, release date (exact or vague), release status, my status,
+### Phase 1 — Core ✍️ *(built — fixing open issues, see [HANDOFF.md](HANDOFF.md))*
+- [x] Add, edit, delete games manually — every field editable
+- [x] Fields: title, summary, cover, release date (exact or vague), release status, my status,
       priority, platforms, genres, developers, publishers, tags, screenshots, trailers, links
-- [ ] Tags with colors — create, rename, recolor, delete
-- [ ] Priority levels (named, with emoji)
-- [ ] Card grid ⇄ table toggle
-- [ ] Sort by any field (click table headers or pick from the sort menu)
-- [ ] Filters: search, priority, statuses, tags, platforms, genres, release window
-- [ ] Saved views (save the current filters + sort under a name)
-- [ ] Dark / light theme
-- [ ] Local SQLite database with migrations
-- [ ] GitHub Actions: tests + portable Windows `.exe` build
+- [x] Tags with colors — create, rename, recolor, delete
+- [x] Priority levels (named, with emoji)
+- [x] Card grid ⇄ table toggle
+- [x] Sort by any field (click table headers or pick from the sort menu)
+- [x] Filters: search, priority, statuses, tags, platforms, genres, release window
+- [x] Saved views (save the current filters + sort under a name)
+- [x] Dark / light theme
+- [x] Local SQLite database with migrations
+- [x] GitHub Actions: tests + portable Windows `.exe` build
 
 ### Phase 2 — Auto-fill 🔎
 - [ ] In-app setup screen for the IGDB (Twitch) key
