@@ -1,0 +1,125 @@
+/*
+ * Design tokens. Every color in the app comes from here so dark/light switch in one place.
+ * Dark is the default; <html data-theme="light"> switches to light.
+ */
+:root,
+:root[data-theme='dark'] {
+  --bg: #0d0f14;
+  --bg-elev: #12151c;
+  --surface: #181c25;
+  --surface-2: #1f2430;
+  --surface-3: #282e3c;
+  --border: #2a3040;
+  --border-strong: #3a4256;
+  --text: #e9ecf2;
+  --text-muted: #a0a8b9;
+  --text-faint: #6f7789;
+
+  --accent: #8b6cff;
+  --accent-hover: #9d83ff;
+  --accent-soft: rgb(139 108 255 / 0.16);
+  --accent-contrast: #ffffff;
+
+  --danger: #f2555a;
+  --danger-soft: rgb(242 85 90 / 0.14);
+  --success: #4cc38a;
+  --success-soft: rgb(76 195 138 / 0.14);
+  --warning: #ffb224;
+  --info: #52a9ff;
+
+  --priority-must: #ff6b4a;
+  --priority-high: #ffb224;
+  --priority-interested: #4cc38a;
+  --priority-maybe: #52a9ff;
+  --priority-watching: #9399a8;
+
+  --status-rumored: #9399a8;
+  --status-announced: #52a9ff;
+  --status-early_access: #ffb224;
+  --status-released: #4cc38a;
+  --status-cancelled: #f2555a;
+
+  --overlay: rgb(5 6 10 / 0.66);
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-md: 0 6px 20px rgb(0 0 0 / 0.35);
+  --shadow-lg: 0 20px 50px rgb(0 0 0 / 0.55);
+  --cover-fade: linear-gradient(180deg, transparent 45%, rgb(10 12 16 / 0.92));
+
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --bg: #f4f5f8;
+  --bg-elev: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #eef0f5;
+  --surface-3: #e3e7ef;
+  --border: #dde1ea;
+  --border-strong: #c5cbd8;
+  --text: #151922;
+  --text-muted: #555e70;
+  --text-faint: #858d9e;
+
+  --accent: #6a4cf0;
+  --accent-hover: #5a3be0;
+  --accent-soft: rgb(106 76 240 / 0.12);
+  --accent-contrast: #ffffff;
+
+  --danger: #d93a40;
+  --danger-soft: rgb(217 58 64 / 0.1);
+  --success: #23935c;
+  --success-soft: rgb(35 147 92 / 0.1);
+  --warning: #b97800;
+  --info: #1f74d4;
+
+  --priority-must: #e0452a;
+  --priority-high: #c48100;
+  --priority-interested: #23935c;
+  --priority-maybe: #1f74d4;
+  --priority-watching: #6b7180;
+
+  --status-rumored: #6b7180;
+  --status-announced: #1f74d4;
+  --status-early_access: #b97800;
+  --status-released: #23935c;
+  --status-cancelled: #d93a40;
+
+  --overlay: rgb(20 24 32 / 0.4);
+  --shadow-sm: 0 1px 2px rgb(16 24 40 / 0.08);
+  --shadow-md: 0 6px 20px rgb(16 24 40 / 0.1);
+  --shadow-lg: 0 20px 50px rgb(16 24 40 / 0.18);
+  --cover-fade: linear-gradient(180deg, transparent 45%, rgb(10 12 16 / 0.85));
+
+  color-scheme: light;
+}
+
+:root {
+  --font: 'Segoe UI Variable Text', 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial,
+    'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
+  --font-display: 'Segoe UI Variable Display', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --mono: 'Cascadia Mono', Consolas, ui-monospace, monospace;
+
+  --radius-sm: 6px;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 999px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  --text-xs: 11px;
+  --text-sm: 12.5px;
+  --text-md: 14px;
+  --text-lg: 16px;
+  --text-xl: 20px;
+  --text-2xl: 26px;
+
+  --sidebar-width: 240px;
+  --toolbar-height: 56px;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}

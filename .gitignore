@@ -1,0 +1,22 @@
+# Dependencies & build output
+node_modules
+dist
+dist-ssr
+*.local
+
+# Tests
+test-results
+playwright-report
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editors / OS
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+Thumbs.db
+*.suo
+*.sw?
