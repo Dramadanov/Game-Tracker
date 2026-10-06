@@ -1,0 +1,349 @@
+/* ── Tag manager dialog ──────────────────────────────────────────────────── */
+
+.tagmgr {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  /* Leaves room for the color panel to open below the last rows. */
+  min-height: 300px;
+}
+
+/*
+ * New-tag row stays visible while the list scrolls under it. The negative margins pull it over
+ * the dialog body's padding; the sticky offset is measured from the body's content box, hence -20px.
+ */
+.tagmgr-top {
+  position: sticky;
+  top: calc(-1 * var(--space-5));
+  z-index: 2;
+  margin: calc(-1 * var(--space-5)) calc(-1 * var(--space-5)) 0;
+  padding: var(--space-5) var(--space-5) var(--space-1);
+  background: var(--bg-elev);
+}
+
+.tagmgr-new {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.tagmgr-new-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.tagmgr-new .btn {
+  flex-shrink: 0;
+}
+
+/* Inline notices (duplicate names). Empty slot takes no space. */
+.tagmgr-notice {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--space-2);
+  padding: 6px var(--space-2);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--info) 12%, transparent);
+  color: var(--text);
+  font-size: var(--text-sm);
+  animation: tagmgr-notice-in 160ms var(--ease);
+}
+
+.tagmgr-notice svg {
+  flex-shrink: 0;
+  color: var(--info);
+}
+
+@keyframes tagmgr-notice-in {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+}
+
+/* ── Color swatch trigger & grid ─────────────────────────────────────────── */
+
+.tagmgr-swatch-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  transition:
+    background-color 120ms var(--ease),
+    border-color 120ms var(--ease);
+}
+
+.tagmgr-swatch-btn-md {
+  width: 34px;
+  height: 34px;
+}
+
+.tagmgr-swatch-btn-sm {
+  width: 28px;
+  height: 28px;
+  border-color: transparent;
+  background: transparent;
+  border-radius: var(--radius-sm);
+}
+
+.tagmgr-swatch-btn:hover,
+.tagmgr-swatch-btn[aria-expanded='true'] {
+  border-color: var(--border-strong);
+  background: var(--surface-2);
+}
+
+.tagmgr-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--swatch);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--swatch) 24%, transparent);
+  transition: transform 140ms var(--ease);
+}
+
+.tagmgr-swatch-btn:hover .tagmgr-swatch {
+  transform: scale(1.1);
+}
+
+.popover-panel.tagmgr-colors {
+  width: max-content;
+  min-width: 0;
+  padding: var(--space-1) var(--space-2) var(--space-2);
+}
+
+.popover-panel.tagmgr-colors-up {
+  top: auto;
+  bottom: calc(100% + 6px);
+}
+
+.tagmgr-colors .menu-heading {
+  padding-left: 2px;
+}
+
+.tagmgr-color-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 26px);
+  gap: var(--space-2);
+  padding: 2px;
+}
+
+.tagmgr-color {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--swatch);
+  color: var(--accent-contrast);
+  transition:
+    transform 120ms var(--ease),
+    box-shadow 120ms var(--ease);
+}
+
+.tagmgr-color svg {
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.35));
+}
+
+.tagmgr-color:hover {
+  transform: scale(1.12);
+}
+
+.tagmgr-color.is-selected {
+  box-shadow:
+    0 0 0 2px var(--bg-elev),
+    0 0 0 4px var(--swatch);
+}
+
+.tagmgr-color:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+/* ── Tag list ────────────────────────────────────────────────────────────── */
+
+.tagmgr-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.tagmgr-section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 0 2px;
+}
+
+.tagmgr-section-title {
+  font-size: var(--text-xs);
+  font-weight: 650;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.tagmgr-section-hint {
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+}
+
+.tagmgr-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.tagmgr-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: var(--space-1) var(--space-2) var(--space-1) 6px;
+  transition: background-color 140ms var(--ease);
+  /* Keeps rows scrolled into view clear of the sticky new-tag row. */
+  scroll-margin-top: 72px;
+  scroll-margin-bottom: var(--space-2);
+}
+
+.tagmgr-row + .tagmgr-row {
+  border-top: 1px solid var(--border);
+}
+
+.tagmgr-row:first-child {
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+}
+
+.tagmgr-row:last-child {
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+}
+
+.tagmgr-row:hover {
+  background: color-mix(in srgb, var(--surface-2) 70%, transparent);
+}
+
+.tagmgr-row.is-highlighted {
+  animation: tagmgr-flash 1.6s var(--ease);
+}
+
+@keyframes tagmgr-flash {
+  0%,
+  30% {
+    background: color-mix(in srgb, var(--tag-color) 20%, transparent);
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+.tagmgr-name {
+  width: 100%;
+  min-width: 0;
+  height: 30px;
+  padding: 0 var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text);
+  font-size: var(--text-md);
+  font-weight: 550;
+  text-overflow: ellipsis;
+  transition:
+    border-color 120ms var(--ease),
+    background-color 120ms var(--ease),
+    box-shadow 120ms var(--ease);
+}
+
+.tagmgr-name:hover {
+  border-color: var(--border);
+}
+
+.tagmgr-name:focus,
+.tagmgr-name:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--bg-elev);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.tagmgr-count {
+  min-width: 64px;
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.tagmgr-count.is-zero {
+  color: var(--text-faint);
+}
+
+.tagmgr-row .tagmgr-delete {
+  color: var(--text-faint);
+}
+
+.tagmgr-row .tagmgr-delete:hover:not(:disabled),
+.tagmgr-row .tagmgr-delete:focus-visible {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+/* ── Empty state & footer ────────────────────────────────────────────────── */
+
+.tagmgr-empty {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-8) var(--space-6);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.tagmgr-empty-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: var(--space-1);
+  border-radius: 16px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.tagmgr-empty-title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 650;
+}
+
+.tagmgr-empty-text {
+  max-width: 340px;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.tagmgr-footer-hint {
+  margin-right: auto;
+  font-size: var(--text-sm);
+  color: var(--text-faint);
+}
